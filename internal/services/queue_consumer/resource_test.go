@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/cloudflare/cloudflare-go/v6"
@@ -365,19 +366,27 @@ func testAccCheckCloudflareQueueConsumerDestroy(s *terraform.State) error {
 }
 
 func testAccCheckCloudflareQueueConsumerWorker(rnd, accountID, queueName string) string {
-	return acctest.LoadTestCase("queueconsumer_worker.tf", accountID, queueName, rnd, accountID, accountID)
+	pwd, _ := os.Getwd()
+	jsPath := filepath.Join(pwd, "testdata", "index.js")
+	return acctest.LoadTestCase("queueconsumer_worker.tf", accountID, queueName, rnd, accountID, accountID, jsPath)
 }
 
 func testAccCheckCloudflareQueueConsumerWorkerUpdate(rnd, accountID, queueName string) string {
-	return acctest.LoadTestCase("queueconsumer_worker_update.tf", accountID, queueName, rnd, accountID, accountID)
+	pwd, _ := os.Getwd()
+	jsPath := filepath.Join(pwd, "testdata", "index.js")
+	return acctest.LoadTestCase("queueconsumer_worker_update.tf", accountID, queueName, rnd, accountID, accountID, jsPath)
 }
 
 func testAccCheckCloudflareQueueConsumerWorkerWithSettings(rnd, accountID, queueName string) string {
-	return acctest.LoadTestCase("queueconsumer_worker_with_settings.tf", accountID, queueName, rnd, accountID, accountID)
+	pwd, _ := os.Getwd()
+	jsPath := filepath.Join(pwd, "testdata", "index.js")
+	return acctest.LoadTestCase("queueconsumer_worker_with_settings.tf", accountID, queueName, rnd, accountID, accountID, jsPath)
 }
 
 func testAccCheckCloudflareQueueConsumerWorkerWithSettingsUpdate(rnd, accountID, queueName string) string {
-	return acctest.LoadTestCase("queueconsumer_worker_with_settings_update.tf", accountID, queueName, rnd, accountID, accountID)
+	pwd, _ := os.Getwd()
+	jsPath := filepath.Join(pwd, "testdata", "index.js")
+	return acctest.LoadTestCase("queueconsumer_worker_with_settings_update.tf", accountID, queueName, rnd, accountID, accountID, jsPath)
 }
 
 func testAccCheckCloudflareQueueConsumerHttpPull(rnd, accountID, queueName string) string {
@@ -393,11 +402,15 @@ func testAccCheckCloudflareQueueConsumerHttpPullWithSettingsUpdate(rnd, accountI
 }
 
 func testAccCheckCloudflareQueueConsumerWorkerWithDeadLetter(rnd, accountID, queueName, dlqName string) string {
-	return acctest.LoadTestCase("queueconsumer_worker_with_dead_letter.tf", accountID, queueName, accountID, dlqName, rnd, accountID, accountID)
+	pwd, _ := os.Getwd()
+	jsPath := filepath.Join(pwd, "testdata", "index.js")
+	return acctest.LoadTestCase("queueconsumer_worker_with_dead_letter.tf", accountID, queueName, accountID, dlqName, rnd, accountID, accountID, jsPath)
 }
 
 func testAccCheckCloudflareQueueConsumerWorkerWithDeadLetterUpdate(rnd, accountID, queueName, dlqName1, dlqName2 string) string {
-	return acctest.LoadTestCase("queueconsumer_worker_with_dead_letter_update.tf", accountID, queueName, accountID, dlqName1, accountID, dlqName2, rnd, accountID, accountID)
+	pwd, _ := os.Getwd()
+	jsPath := filepath.Join(pwd, "testdata", "index.js")
+	return acctest.LoadTestCase("queueconsumer_worker_with_dead_letter_update.tf", accountID, queueName, accountID, dlqName1, accountID, dlqName2, rnd, accountID, accountID, jsPath)
 }
 
 func testAccCheckCloudflareQueueConsumerHttpPullWithDeadLetter(rnd, accountID, queueName, dlqName string) string {

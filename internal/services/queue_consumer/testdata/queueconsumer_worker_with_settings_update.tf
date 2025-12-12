@@ -7,7 +7,7 @@ resource "cloudflare_queue_consumer" "%s" {
   account_id  = "%s"
   queue_id    = cloudflare_queue.test_queue.id
   type        = "worker"
-  script_name = "test-worker"
+  script_name = cloudflare_workers_script.worker_script.script_name
 
   settings = {
     batch_size        = 20
@@ -19,21 +19,29 @@ resource "cloudflare_queue_consumer" "%s" {
 resource "cloudflare_workers_script" "worker_script" {
   account_id  = "%s"
   script_name = "test-worker"
-  bindings = [
+  metadata = {
+    main_module = "main.js"
+    bindings = [
+      {
+        type       = "queue"
+        name       = "incoming"
+        queue_name = cloudflare_queue.test_queue.queue_name
+      }
+    ]
+  }
+  files = [
     {
-      type       = "queue"
-      name       = "incoming"
-      queue_name = cloudflare_queue.test_queue.queue_name
+      name    = "main.js"
+      content = <<-EOT
+      export default {
+        async queue(batch, env, ctx) {
+          for (const message of batch.messages) {
+            console.log('Received', message);
+          }
+        }
+      }
+      EOT
     }
   ]
-  content             = <<-EOT
-export default {
-  async queue(batch, env, ctx) {
-    for (const message of batch.messages) {
-      console.log('Received', message);
-    }
-  }
-};
-EOT
-  main_module         = "index.js"
+  
 }
